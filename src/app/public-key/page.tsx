@@ -54,16 +54,6 @@ export default function PublicKeyPage() {
         return modeMap[mode];
     };
 
-    const handleSelectMode = (mode: Mode) => {
-        // If current data exists, warn the user.
-        if ((imageData || salt) && mode !== currentMode) {
-            setSelectedModeToSwitch(mode);
-            setShowSwitchWarning(true);
-        } else {
-            router.push(getRouteForMode(mode));
-        }
-    };
-
     const confirmModeSwitch = () => {
         // Clear current data and navigate.
         setImageData(null);
@@ -86,7 +76,7 @@ export default function PublicKeyPage() {
             <Header />
             {/* ModeSelector displayed under the header */}
             <div className="px-4 py-4">
-                <ModeSelector currentMode={currentMode} onSelectMode={handleSelectMode} />
+                <ModeSelector currentMode={currentMode} />
             </div>
             <main className="flex-grow px-4 py-8">
                 {/* Image Uploader */}

@@ -1,20 +1,9 @@
 "use client"
-import { useRouter } from "next/navigation";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import ModeSelector, { Mode } from "./components/ModeSelector";
+import ModeSelector from "./components/ModeSelector";
 
 export default function HomePage() {
-    const router = useRouter();
-
-    const handleModeSelect = (mode: Mode) => {
-        const modeRoutes: { [key in Mode]: string } = {
-            password: "/password",
-            "public-key": "/public-key",
-            file: "/file",
-        };
-        router.push(modeRoutes[mode]); // Navigate to the correct page
-    };
 
     return (
         <div className="min-h-screen bg-white font-sans flex flex-col">
@@ -28,7 +17,7 @@ export default function HomePage() {
                     these keys are sure to be secure!
                 </p>
                 <h2 className="text-xl font-semibold mb-4 mt-10">Select a mode to get started:</h2>
-                <ModeSelector onSelectMode={handleModeSelect} /> {/* No currentMode prop */}
+                <ModeSelector /> {/* No currentMode prop */}
             </main>
 
             <Footer />

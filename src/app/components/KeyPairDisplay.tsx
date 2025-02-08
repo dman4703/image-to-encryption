@@ -27,25 +27,25 @@ export default function KeyPairDisplay({ publicKey, privateKey }: KeyPairDisplay
     };
 
     return (
-        <div className="flex flex-col items-center space-y-4">
-            <div className="bg-gray-100 p-4 rounded-md w-full max-w-xl">
-                <h3 className="text-lg font-semibold mb-2">Public Key</h3>
-                <p className="font-mono break-all">{publicKey}</p>
+        <div className="flex flex-col items-center space-y-4 w-full max-w-3xl">
+            <div className="bg-gray-100 p-4 rounded-md w-full flex items-center space-x-2 overflow-x-auto">
+                <h3 className="text-lg font-semibold whitespace-nowrap">Public Key:</h3>
+                <p className="font-mono whitespace-nowrap overflow-x-auto flex-1">{publicKey}</p>
                 <button
                     onClick={() => copyText(publicKey, "public")}
-                    className="mt-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+                    className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition"
                 >
-                    {copiedPublic ? "Copied!" : "Copy Public Key"}
+                    {copiedPublic ? "Copied!" : "Copy"}
                 </button>
             </div>
-            <div className="bg-gray-100 p-4 rounded-md w-full max-w-xl">
-                <h3 className="text-lg font-semibold mb-2">Private Key</h3>
-                <p className="font-mono break-all">{privateKey}</p>
+            <div className="bg-gray-100 p-4 rounded-md w-full flex items-center space-x-2 overflow-x-auto">
+                <h3 className="text-lg font-semibold whitespace-nowrap">Private Key:</h3>
+                <p className="font-mono whitespace-nowrap overflow-x-auto flex-1">{privateKey}</p>
                 <button
                     onClick={() => copyText(privateKey, "private")}
-                    className="mt-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+                    className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition"
                 >
-                    {copiedPrivate ? "Copied!" : "Copy Private Key"}
+                    {copiedPrivate ? "Copied!" : "Copy"}
                 </button>
             </div>
         </div>
