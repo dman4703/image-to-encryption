@@ -17,7 +17,7 @@ Image to Encryption is a unique tool that uses the inherent randomness in images
 
 ## Technologies Used
 
-- **Frontend Framework**: Next.js 14 with React
+- **Frontend Framework**: Next.js with React
 - **Styling**: Tailwind CSS
 - **Language**: TypeScript
 
