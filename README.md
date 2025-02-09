@@ -62,8 +62,9 @@ One of the major challenges faced during development was implementing robust fil
 ### Setup Steps
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/ImageEncryptionApp.git
-   cd ImageEncryptionApp
+   git clone https://github.com/dman4703/image-to-encryption.git
+   
+   cd image-to-encryption
    ```
 2. Install Dependencies:
   ```bash
