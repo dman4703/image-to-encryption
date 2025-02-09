@@ -18,7 +18,13 @@ export default function ImageUploader({ onImageProcessed }: ImageUploaderProps) 
 
         if (mode === "camera") {
             navigator.mediaDevices
-                .getUserMedia({ video: true })
+                .getUserMedia({
+                    video: {
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 },
+                        aspectRatio: { ideal: 16 / 9 }
+                    }
+                })
                 .then((mediaStream) => {
                     currentStream = mediaStream;
                     if (videoRef.current) {
@@ -30,7 +36,7 @@ export default function ImageUploader({ onImageProcessed }: ImageUploaderProps) 
                     console.error("Error accessing camera:", err);
                 });
         }
-        // Cleanup function stops the stream when mode changes or component unmounts.
+
         return () => {
             if (currentStream) {
                 currentStream.getTracks().forEach((track) => track.stop());
@@ -68,18 +74,32 @@ export default function ImageUploader({ onImageProcessed }: ImageUploaderProps) 
     // Handle taking a photo (Camera mode)
     const handleTakePhoto = () => {
         if (!videoRef.current) return;
+
         const canvas = document.createElement("canvas");
-        const width = 128;
-        const height = 128;
-        canvas.width = width;
-        canvas.height = height;
+        // Use video's actual dimensions for the canvas.
+        const videoWidth = videoRef.current.videoWidth;
+        const videoHeight = videoRef.current.videoHeight;
+
+        canvas.width = videoWidth;
+        canvas.height = videoHeight;
+
         const ctx = canvas.getContext("2d");
         if (ctx) {
-            ctx.drawImage(videoRef.current, 0, 0, width, height);
-            const imageData = ctx.getImageData(0, 0, width, height);
-            // Generate a preview data URL from the canvas
-            const preview = canvas.toDataURL("image/png");
-            onImageProcessed({ imageData, preview });
+            ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+
+            // Create a second canvas for processing the image to 128x128.
+            const processCanvas = document.createElement("canvas");
+            processCanvas.width = 128;
+            processCanvas.height = 128;
+            const processCtx = processCanvas.getContext("2d");
+            if (processCtx) {
+                processCtx.drawImage(canvas, 0, 0, 128, 128);
+                const imageData = processCtx.getImageData(0, 0, 128, 128);
+
+                // For the preview, use the full resolution canvas.
+                const preview = canvas.toDataURL("image/png");
+                onImageProcessed({ imageData, preview });
+            }
         }
     };
 
@@ -89,17 +109,13 @@ export default function ImageUploader({ onImageProcessed }: ImageUploaderProps) 
             <div className="mb-4 flex space-x-4">
                 <button
                     onClick={() => setMode("upload")}
-                    className={`px-4 py-2 border rounded ${
-                        mode === "upload" ? "bg-gray-200" : "bg-white"
-                    }`}
+                    className={`px-4 py-2 border rounded ${mode === "upload" ? "bg-gray-200" : "bg-white"}`}
                 >
                     Upload Image
                 </button>
                 <button
                     onClick={() => setMode("camera")}
-                    className={`px-4 py-2 border rounded ${
-                        mode === "camera" ? "bg-gray-200" : "bg-white"
-                    }`}
+                    className={`px-4 py-2 border rounded ${mode === "camera" ? "bg-gray-200" : "bg-white"}`}
                 >
                     Take Photo
                 </button>
@@ -108,9 +124,7 @@ export default function ImageUploader({ onImageProcessed }: ImageUploaderProps) 
             {/* Conditional rendering based on selected mode */}
             {mode === "upload" && (
                 <div className="flex flex-col items-center">
-                    <label className="mb-2 font-medium">
-                        Upload an image for randomness:
-                    </label>
+                    <label className="mb-2 font-medium">Upload an image for randomness:</label>
                     <input
                         type="file"
                         accept="image/*"
@@ -123,16 +137,18 @@ export default function ImageUploader({ onImageProcessed }: ImageUploaderProps) 
 
             {mode === "camera" && (
                 <div className="flex flex-col items-center">
-                    {/* Video preview for camera mode */}
-                    <video
-                        ref={videoRef}
-                        className="w-64 h-64 rounded border mb-4"
-                        autoPlay
-                        playsInline
-                    ></video>
+                    {/* Video preview container with fixed dimensions */}
+                    <div className="w-[40%] h-[22%] bg-black rounded-lg overflow-hidden mb-4">
+                        <video
+                            ref={videoRef}
+                            className="w-full h-full object-cover"
+                            autoPlay
+                            playsInline
+                        ></video>
+                    </div>
                     <button
                         onClick={handleTakePhoto}
-                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                        className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
                     >
                         Take Photo
                     </button>

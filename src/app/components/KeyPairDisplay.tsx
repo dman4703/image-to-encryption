@@ -27,26 +27,33 @@ export default function KeyPairDisplay({ publicKey, privateKey }: KeyPairDisplay
     };
 
     return (
-        <div className="flex flex-col items-center space-y-4 w-full max-w-3xl">
-            <div className="bg-gray-100 p-4 rounded-md w-full flex items-center space-x-2 overflow-x-auto">
-                <h3 className="text-lg font-semibold whitespace-nowrap">Public Key:</h3>
-                <p className="font-mono whitespace-nowrap overflow-x-auto flex-1">{publicKey}</p>
-                <button
-                    onClick={() => copyText(publicKey, "public")}
-                    className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition"
-                >
-                    {copiedPublic ? "Copied!" : "Copy"}
-                </button>
-            </div>
-            <div className="bg-gray-100 p-4 rounded-md w-full flex items-center space-x-2 overflow-x-auto">
-                <h3 className="text-lg font-semibold whitespace-nowrap">Private Key:</h3>
-                <p className="font-mono whitespace-nowrap overflow-x-auto flex-1">{privateKey}</p>
-                <button
-                    onClick={() => copyText(privateKey, "private")}
-                    className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition"
-                >
-                    {copiedPrivate ? "Copied!" : "Copy"}
-                </button>
+        <div className="w-full max-w-3xl mx-auto px-4">
+            <div className="flex flex-col items-center space-y-4">
+                <div className="w-full bg-gray-100 p-4 rounded-md">
+                    <div className="flex items-center justify-between gap-4">
+                        <div className="font-semibold min-w-[100px]">Public Key:</div>
+                        <div className="font-mono flex-1 overflow-x-auto">{publicKey}</div>
+                        <button
+                            onClick={() => copyText(publicKey, "public")}
+                            className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition shrink-0"
+                        >
+                            {copiedPublic ? "Copied!" : "Copy"}
+                        </button>
+                    </div>
+                </div>
+
+                <div className="w-full bg-gray-100 p-4 rounded-md">
+                    <div className="flex items-center justify-between gap-4">
+                        <div className="font-semibold min-w-[100px]">Private Key:</div>
+                        <div className="font-mono flex-1 overflow-x-auto">{privateKey}</div>
+                        <button
+                            onClick={() => copyText(privateKey, "private")}
+                            className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition shrink-0"
+                        >
+                            {copiedPrivate ? "Copied!" : "Copy"}
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     );

@@ -11,33 +11,28 @@ import SaltInput from "../components/SaltInput";
 import EntropyMeter from "../components/EntropyMeter";
 import PublicKeyProcessor from "../components/PublicKeyProcessor";
 import KeyPairDisplay from "../components/KeyPairDisplay";
+import Image from "next/image";
 
 export default function PublicKeyPage() {
     const router = useRouter();
     const currentMode: Mode = "public-key";
 
-    // State for image data and preview.
+    // State management
     const [imageData, setImageData] = useState<ImageData | null>(null);
     const [preview, setPreview] = useState<string>("");
-
-    // State for salt and key pair.
     const [salt, setSalt] = useState<string>("");
     const [keyPair, setKeyPair] = useState<{ publicKey: string; privateKey: string } | null>(null);
-
-    // State for mode switch warning modal.
     const [showSwitchWarning, setShowSwitchWarning] = useState<boolean>(false);
     const [selectedModeToSwitch, setSelectedModeToSwitch] = useState<Mode | null>(null);
 
     const handleImageUpload = (data: { imageData: ImageData; preview: string }) => {
         setImageData(data.imageData);
         setPreview(data.preview);
-        // Clear any previous keys if a new image is uploaded.
         setKeyPair(null);
     };
 
     const handleSaltChange = (value: string) => {
         setSalt(value);
-        // Clear any previous keys if salt changes.
         setKeyPair(null);
     };
 
@@ -55,7 +50,6 @@ export default function PublicKeyPage() {
     };
 
     const confirmModeSwitch = () => {
-        // Clear current data and navigate.
         setImageData(null);
         setPreview("");
         setSalt("");
@@ -72,47 +66,84 @@ export default function PublicKeyPage() {
     };
 
     return (
-        <div className="min-h-screen bg-white font-sans flex flex-col">
+        <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 font-sans flex flex-col">
             <Header />
-            {/* ModeSelector displayed under the header */}
-            <div className="px-4 py-4">
-                <ModeSelector currentMode={currentMode} />
+
+            {/* Mode Selector with improved styling */}
+            <div className="bg-white shadow-sm">
+                <div className="max-w-4xl mx-auto px-4 py-4">
+                    <ModeSelector currentMode={currentMode} />
+                </div>
             </div>
+
             <main className="flex-grow px-4 py-8">
-                {/* Image Uploader */}
-                <div className="mb-6">
-                    <ImageUploader onImageProcessed={handleImageUpload} />
+                <div className="max-w-4xl mx-auto space-y-8">
+                    {/* Title and Description */}
+                    <div className="text-center">
+                        <h2 className="text-2xl font-bold text-gray-800 mb-4">Public Key Generator</h2>
+                        <p className="text-gray-600">
+                            Generate a secure public/private key pair using the entropy from your image combined with a personal salt value.
+                        </p>
+                    </div>
+
+                    {/* Image Upload Section */}
+                    <div className="bg-white rounded-xl shadow-lg p-6">
+                        <div className="mb-6">
+                            <ImageUploader onImageProcessed={handleImageUpload} />
+                        </div>
+
+                        {/* Preview Image */}
+                        {preview && (
+                            <div className="flex justify-center mb-6">
+                                <div className="relative group">
+                                    <Image
+                                        src={preview}
+                                        alt="Uploaded preview"
+                                        width={300}
+                                        height={300}
+                                        className="rounded-lg shadow-md transition-transform duration-300 group-hover:scale-[1.02]"
+                                    />
+                                    <div className="absolute inset-0 rounded-lg shadow-inner pointer-events-none"></div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Entropy Meter */}
+                        {imageData && (
+                            <div className="bg-gray-50 rounded-lg p-4">
+                                <EntropyMeter imageData={imageData} />
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Salt Input Section */}
+                    <div className="bg-white rounded-xl shadow-lg p-6">
+                        <SaltInput onSaltChange={handleSaltChange} />
+                        {imageData && salt && (
+                            <div className="my-5">
+                                <PublicKeyProcessor
+                                    imageData={imageData}
+                                    salt={salt}
+                                    onResult={handleKeyPairGenerated}
+                                />
+                            </div>
+                        )}
+                    </div>
+
+
+                    {/* Key Pair Display Section */}
+                    {keyPair && (
+                        <div className="bg-white rounded-xl shadow-lg p-6">
+                            <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">
+                                Your Generated Key Pair
+                            </h3>
+                            <KeyPairDisplay publicKey={keyPair.publicKey} privateKey={keyPair.privateKey} />
+                        </div>
+                    )}
+                    <Footer />
                 </div>
-                {/* Display uploaded image preview above the salt input */}
-                {preview && (
-                    <div className="mb-6 flex justify-center">
-                        <img src={preview} alt="Uploaded preview" className="max-w-xs rounded border" />
-                    </div>
-                )}
-                {/* Salt Input */}
-                <div className="mb-6">
-                    <SaltInput onSaltChange={handleSaltChange} />
-                </div>
-                {/* Entropy Meter */}
-                {imageData && (
-                    <div className="mb-6">
-                        <EntropyMeter imageData={imageData} />
-                    </div>
-                )}
-                {/* Public Key Processor */}
-                {imageData && salt && (
-                    <div className="mb-6">
-                        <PublicKeyProcessor imageData={imageData} salt={salt} onResult={handleKeyPairGenerated} />
-                    </div>
-                )}
-                {/* Key Pair Display */}
-                {keyPair && (
-                    <div className="mb-6">
-                        <KeyPairDisplay publicKey={keyPair.publicKey} privateKey={keyPair.privateKey} />
-                    </div>
-                )}
             </main>
-            <Footer />
+
             {showSwitchWarning && (
                 <ModeSwitchWarning onConfirm={confirmModeSwitch} onCancel={cancelModeSwitch} />
             )}
