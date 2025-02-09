@@ -48,6 +48,7 @@ export default function FileHandler({ imageData, salt }: FileHandlerProps) {
     const [processing, setProcessing] = useState<boolean>(false);
     const [isValidEncryptedFile, setIsValidEncryptedFile] = useState<boolean>(true);
     const [decryptedFileName, setDecryptedFileName] = useState<string>("");
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [decryptedFileType, setDecryptedFileType] = useState<string>("");
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
