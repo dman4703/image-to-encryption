@@ -32,7 +32,7 @@ export default function HomePage() {
                     {/* Description Section */}
                     <div className="bg-white p-8 rounded-xl shadow-lg mb-10">
                         <p className="text-lg text-gray-700 leading-relaxed">
-                            Inspired by Cloudfare's lava lamp wall, this tool lets you to create
+                            Inspired by Cloudfare&apos;s lava lamp wall, this tool lets you to create
                             secure cryptographic keys using the inherent randomness of your images. You can create
                             a strong password, an asymmetric key pair, or a file encryption key, and the unpredictable
                             patterns within your images will ensure robust security.
